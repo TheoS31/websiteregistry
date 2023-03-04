@@ -1,3 +1,4 @@
+import pywebio
 from pywebio.input import *
 from pywebio.output import *
 from pywebio.session import *
@@ -5,6 +6,11 @@ from pywebio import start_server, session
 from pywebio import config
 from pywebio.pin import *
 from Functions import *
+import argparse
+import locale
+from pywebio.platform.flask import webio_view
+from flask import Flask
+app = Flask(__name__)
 cnx = mysql.connector.connect(user="sql8599140",
                               password="xX7MgYR8Rz",
                               host="sql8.freemysqlhosting.net",
@@ -61,7 +67,6 @@ border-color: black;
 
 @config(title='Main page',theme="dark",css_style=index_style)
 def index():
-    session.run_js('WebIO._state.CurrentSession.on_session_close(()=>{setTimeout(()=>location.reload(), 4000})')
     global auth
     global verified
     if not auth:
@@ -227,6 +232,11 @@ def delete():
     cnx.commit()
     run_js('window.location.reload()')
 
-start_server([index,table,form, table2], port=2222, debug=False)
+app.add_url_rule('/', 'webio_view', webio_view(index),methods=['GET', 'POST', 'OPTIONS'])
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--port", type=int, default=8080)
+    args = parser.parse_args()
 
+pywebio.start_server([index, table, table2, form], port=args.port)
