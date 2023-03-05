@@ -11,11 +11,11 @@ import locale
 from pywebio.platform.flask import webio_view
 from flask import Flask
 app = Flask(__name__)
-cnx = mysql.connector.connect(user="sql8599140",
-                              password="xX7MgYR8Rz",
-                              host="sql8.freemysqlhosting.net",
+cnx = mysql.connector.connect(user="j8gyaqvjcifzcpkb",
+                              password="hs04c2hqym36w909",
+                              host="n2o93bb1bwmn0zle.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
                               port=3306,
-                              database="sql8599140")
+                              database="oit5yzwieqpr5ash")
 cursor = cnx.cursor(buffered=True)
 
 auth = False
@@ -232,11 +232,10 @@ def delete():
     cnx.commit()
     run_js('window.location.reload()')
 
-app.add_url_rule('/', 'webio_view', webio_view(index),methods=['GET', 'POST', 'OPTIONS'])
+app.add_url_rule('/index', 'webio_view', webio_view(index),methods=['GET', 'POST', 'OPTIONS'])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--port", type=int, default=8080)
     args = parser.parse_args()
-
 pywebio.start_server([index, table, table2, form], port=args.port)
